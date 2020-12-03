@@ -1,3 +1,7 @@
+CREATE DATABASE survey_db;
+
+\c survey_db;
+
 CREATE TABLE publisher(
   publisher_id BIGSERIAL PRIMARY KEY NOT NULL,
   first_name VARCHAR(32) NOT NULL,
@@ -7,12 +11,12 @@ CREATE TABLE publisher(
   unique(email)
 );
 
--- CREATE TABLE TOKENS(
---   id BIGSERIAL PRIMARY KEY NOT NULL,
---   access_token VARCHAR(500) NOT NULL,
---   publisher_id BIGSERIAL NOT NULL,
---   FOREIGN KEY(publisher_id) REFERENCES publisher(publisher_id)
--- );
+CREATE TABLE TOKENS(
+  id BIGSERIAL PRIMARY KEY NOT NULL,
+  access_token VARCHAR(500) NOT NULL,
+  publisher_id BIGSERIAL NOT NULL,
+  FOREIGN KEY(publisher_id) REFERENCES publisher(publisher_id)
+);
 
 CREATE TABLE person(
   person_id BIGSERIAL PRIMARY KEY NOT NULL,
@@ -20,6 +24,11 @@ CREATE TABLE person(
   last_name VARCHAR(32) NOT NULL,
   email VARCHAR(32) NOT NULL,
   unique(email)
+);
+
+CREATE TABLE available_answer(
+  available_answer_id BIGSERIAL PRIMARY KEY NOT NULL,
+  answer TEXT NOT NULL
 );
 
 CREATE TABLE question(
@@ -32,7 +41,7 @@ CREATE TABLE question(
 CREATE TABLE survey(
   survey_id BIGSERIAL PRIMARY KEY NOT NULL,
   publisher_id BIGSERIAL NOT NULL,
-  question_id BIGSERIAL PRIMARY KEY NOT NULL,
+  question_id BIGSERIAL NOT NULL,
   FOREIGN KEY(publisher_id) REFERENCES publisher(publisher_id),
   FOREIGN KEY(question_id) REFERENCES question(question_id)
 
@@ -47,13 +56,10 @@ CREATE TABLE answer(
   FOREIGN KEY(person_id) REFERENCES person(person_id),
   FOREIGN KEY(survey_id) REFERENCES survey(survey_id),
   FOREIGN KEY(question_id) REFERENCES question(question_id),
-  FOREIGN KEY(available_answer_id) REFERENCES available_answer(available_answer_id),
+  FOREIGN KEY(available_answer_id) REFERENCES available_answer(available_answer_id)
 
 );
 
-CREATE TABLE available_answer(
-  available_answer_id BIGSERIAL PRIMARY KEY NOT NULL,
-  answer TEXT NOT NULL
-);
+
 
 

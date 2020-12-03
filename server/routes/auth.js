@@ -20,7 +20,6 @@ Router.post('/signup', async (req, res) => {
             'password'
         ];
         const receivedFields = Object.keys(req.body);
-
         const isInvalidFieldProvided = isInvalidField(
             receivedFields,
             validFieldsToUpdate
@@ -36,6 +35,7 @@ Router.post('/signup', async (req, res) => {
             'select count(*) as count from publisher where email=$1',
             [email]
         );
+
         const count = result.rows[0].count;
         if (count > 0) {
             return res.status(400).send({
@@ -66,9 +66,10 @@ Router.post('/signin', async (req, res) => {
             });
         }
         const token = await generateAuthToken(user);
+
         const result = await pool.query(
-            'insert into tokens(access_token, userid) values($1,$2) returning *',
-            [token, user.userid]
+            'insert into tokens(access_token, publisher_id) values($1,$2) returning *',
+            [token, user.publisher_id]
         );
         if (!result.rows[0]) {
             return res.status(400).send({
@@ -86,9 +87,9 @@ Router.post('/signin', async (req, res) => {
 
 Router.post('/logout', authMiddleware, async (req, res) => {
     try {
-        const { userid, access_token } = req.user;
-        await pool.query('delete from tokens where userid=$1 and access_token=$2', [
-            userid,
+        const { publisher_id, access_token } = req.user;
+        await pool.query('delete from tokens where publisher_id=$1 and access_token=$2', [
+            publisher_id,
             access_token
         ]);
         res.send();
