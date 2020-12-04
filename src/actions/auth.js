@@ -1,5 +1,6 @@
 import { SIGN_IN, BASE_API_URL } from '../utils/constants';
 import axios from 'axios';
+import { history } from '../router/AppRouter';
 import { getErrors } from './errors';
 
 export const signIn = (user) => ({
