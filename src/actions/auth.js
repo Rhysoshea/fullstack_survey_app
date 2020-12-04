@@ -1,5 +1,6 @@
 import { SIGN_IN, BASE_API_URL } from '../utils/constants';
 import axios from 'axios';
+import { history } from '../router/AppRouter';
 import { getErrors } from './errors';
 
 export const signIn = (user) => ({
@@ -17,6 +18,7 @@ export const initiateLogin = (email, password) => {
             const user = result.data;
             localStorage.setItem('user_token', user.token);
             dispatch(signIn(user));
+            history.pushState('/profile');
         } catch (error) {
             console.log('error', error);
             error.response && dispatch(getErrors(error.response.data));
