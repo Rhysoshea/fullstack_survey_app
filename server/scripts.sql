@@ -40,6 +40,7 @@ CREATE TABLE question(
 
 CREATE TABLE survey(
   survey_id BIGSERIAL PRIMARY KEY NOT NULL,
+  survey_title TEXT NOT NULL,
   publisher_id BIGSERIAL NOT NULL,
   question_id BIGSERIAL NOT NULL,
   FOREIGN KEY(publisher_id) REFERENCES publisher(publisher_id),
