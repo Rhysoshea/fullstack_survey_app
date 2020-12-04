@@ -8,8 +8,9 @@ import { resetErrors } from '../actions/errors';
 
 class Profile extends React.Component {
     state = {
-        first_name: '',
-        last_name: '',
+        survey_title: '',
+        question: '',
+        question_answer: '',
         email: '',
         errorMsg: '',
         isSubmitted: false
@@ -18,10 +19,11 @@ class Profile extends React.Component {
     componentDidMount() {
         const { profile } = this.props;
         if (!_.isEmpty(profile)) {
-            const { first_name, last_name, email } = profile;
+            const { survey_title, question, question_answer, email } = profile;
             this.setState({
-                first_name,
-                last_name,
+                survey_title,
+                question,
+                question_answer,
                 email
             });
         }
@@ -34,8 +36,8 @@ class Profile extends React.Component {
             });
         }
         if (!_.isEqual(prevProps.profile, this.props.profile)) {
-            const { first_name, last_name, email } = this.props.profile;
-            this.setState({ first_name, last_name, email });
+            const { survey_title, question, question_answer, email } = this.props.profile;
+            this.setState({ survey_title, question, question_answer, email });
         }
     }
 
@@ -45,13 +47,14 @@ class Profile extends React.Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        const { first_name, last_name } = this.state;
+        const { survey_title, question, question_answer } = this.state;
         const profileData = {
-            first_name,
-            last_name
+            survey_title,
+            question,
+            question_answer
         };
 
-        const fieldsToValidate = [{ first_name }, { last_name }];
+        const fieldsToValidate = [{ survey_title }, { question }, { question_answer }];
 
         const allFieldsEntered = validateFields(fieldsToValidate);
         if (!allFieldsEntered) {
@@ -74,7 +77,7 @@ class Profile extends React.Component {
     };
 
     render() {
-        const { errorMsg, first_name, last_name, email, isSubmitted } = this.state;
+        const { errorMsg, survey_title, question, question_answer, email, isSubmitted } = this.state;
         return (
             <div className="col-md-6 offset-md-3">
                 <Form onSubmit={this.handleSubmit} className="profile-form">
@@ -83,7 +86,7 @@ class Profile extends React.Component {
                     ) : (
                             isSubmitted && (
                                 <p className="successMsg centered-message">
-                                    Profile updated successfully.
+                                    Survey updated successfully.
                                 </p>
                             )
                         )}
@@ -91,23 +94,33 @@ class Profile extends React.Component {
                         <Form.Label>Email address:</Form.Label>
                         <span className="label-value">{email}</span>
                     </Form.Group>
-                    <Form.Group controlId="first_name">
-                        <Form.Label>First name:</Form.Label>
+                    <Form.Group controlId="survey_title">
+                        <Form.Label>Survey Title:</Form.Label>
                         <Form.Control
                             type="text"
-                            name="first_name"
-                            placeholder="Enter your first name"
-                            value={first_name}
+                            name="survey_title"
+                            placeholder="Enter title of your survey"
+                            value={survey_title}
                             onChange={this.handleOnChange}
                         />
                     </Form.Group>
-                    <Form.Group controlId="last_name">
-                        <Form.Label>Last name:</Form.Label>
+                    <Form.Group controlId="question">
+                        <Form.Label>Question:</Form.Label>
                         <Form.Control
                             type="text"
-                            name="last_name"
-                            placeholder="Enter your last name"
-                            value={last_name}
+                            name="question"
+                            placeholder="Enter your question"
+                            value={question}
+                            onChange={this.handleOnChange}
+                        />
+                    </Form.Group>
+                    <Form.Group controlId="question_answer">
+                        <Form.Label>Available answer:</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="question_answer"
+                            placeholder="Enter an answer"
+                            value={question_answer}
                             onChange={this.handleOnChange}
                         />
                     </Form.Group>
