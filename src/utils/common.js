@@ -23,6 +23,10 @@ export const removeAuthHeader = () => {
 export const maintainSession = () => {
     const user_token = localStorage.getItem('user_token');
     if (user_token) {
+        const currentPath = window.location.pathname;
+        if (currentPath === '/' || currentPath === '/register') {
+            history.push('/profile');
+        }
         const decoded = jwt_decode(user_token);
         updateStore(decoded);
     } else {
