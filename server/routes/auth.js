@@ -32,7 +32,7 @@ Router.post('/signup', async (req, res) => {
         }
 
         const result = await pool.query(
-            'select count(*) as count from publisher where email=$1',
+            'SELECT COUNT(*) as count FROM publisher WHERE email=$1',
             [email]
         );
 
@@ -45,7 +45,7 @@ Router.post('/signup', async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 8);
         await pool.query(
-            'insert into publisher(first_name, last_name, email, password) values($1,$2,$3,$4)',
+            'INSERT INTO publisher(first_name, last_name, email, password) VALUES($1,$2,$3,$4)',
             [first_name, last_name, email, hashedPassword]
         );
         res.status(201).send();
@@ -68,7 +68,7 @@ Router.post('/signin', async (req, res) => {
         const token = await generateAuthToken(user);
 
         const result = await pool.query(
-            'insert into tokens(access_token, publisher_id) values($1,$2) returning *',
+            'INSERT INTO tokens(access_token, publisher_id) VALUES($1,$2) RETURNING *',
             [token, user.publisher_id]
         );
         if (!result.rows[0]) {
@@ -88,7 +88,7 @@ Router.post('/signin', async (req, res) => {
 Router.post('/logout', authMiddleware, async (req, res) => {
     try {
         const { publisher_id, access_token } = req.user;
-        await pool.query('delete from tokens where publisher_id=$1 and access_token=$2', [
+        await pool.query('DELETE FROM tokens WHERE publisher_id=$1 AND access_token=$2', [
             publisher_id,
             access_token
         ]);
