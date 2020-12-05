@@ -1,7 +1,8 @@
-import { SIGN_IN, BASE_API_URL } from '../utils/constants';
+import { SIGN_IN, SIGN_OUT, BASE_API_URL } from '../utils/constants';
 import axios from 'axios';
 import { history } from '../router/AppRouter';
 import { getErrors } from './errors';
+import { setAuthHeader, removeAuthHeader } from '../utils/common';
 
 export const signIn = (user) => ({
     type: SIGN_IN,
@@ -35,6 +36,25 @@ export const registerNewUser = (data) => {
             console.log('error', error);
             error.response && dispatch(getErrors(error.response.data));
             return { success: false };
+        }
+    };
+};
+
+
+export const signOut = () => ({
+    type: SIGN_OUT
+});
+
+export const initiateLogout = () => {
+    return async (dispatch) => {
+        try {
+            setAuthHeader();
+            await axios.post(`${BASE_API_URL}/logout`);
+            removeAuthHeader();
+            localStorage.removeItem('user_token');
+            return dispatch(signOut());
+        } catch (error) {
+            error.response && dispatch(getErrors(error.response.data));
         }
     };
 };
