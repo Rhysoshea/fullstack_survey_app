@@ -34,7 +34,6 @@ CREATE TABLE available_answer(
 CREATE TABLE question(
   question_id BIGSERIAL PRIMARY KEY NOT NULL,
   question_text TEXT NOT NULL,
-  available_answer_id BIGSERIAL NOT NULL,
   FOREIGN KEY(available_answer_id) REFERENCES available_answer(available_answer_id)
 );
 
