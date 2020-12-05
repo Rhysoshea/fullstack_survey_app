@@ -100,4 +100,62 @@ Router.post('/logout', authMiddleware, async (req, res) => {
     }
 });
 
+Router.post('/create_survey', async (req, res) => {
+    try {
+        const { survey_title, question, answer, email } = req.body;
+
+        const result_publisher = await pool.query(
+            'SELECT publisher_id FROM publisher WHERE email=$1',
+            [email]
+        );
+        const publisher_id = result_publisher.rows[0].publisher_id; 
+
+        const result_publisher_survey = await pool.query(
+            'SELECT count(*) as count FROM survey WHERE survey_title=$1 AND publisher_id=$2', [survey_title, publisher_id]
+        );
+        const count = result_publisher_survey.rows[0].count;
+
+        if (count < 1) {
+            await pool.query(
+                'INSERT INTO survey(publisher_id, survey_title) VALUES ($1, $2)', 
+                [publisher_id, survey_title]
+            )
+        };
+
+        const result_survey = await pool.query(
+            'SELECT survey_id FROM survey WHERE survey_title=$1 AND publisher_id=$2',
+            [survey_title, publisher_id]
+        );
+        const survey_id = result_survey.rows[0].survey_id;
+
+        const result_answer_id = await pool.query(
+            'INSERT INTO available_answer(answer_text) VALUES ($1) RETURNING available_answer_id',
+            [answer]
+        );
+        const answer_id = result_answer_id.rows[0].available_answer_id;
+
+        const result_question_id  = await pool.query(
+            'INSERT INTO question(question_text) VALUES ($1) RETURNING question_id',
+            [question]
+        );
+        const question_id = result_question_id.rows[0].question_id;
+
+        await pool.query(
+            'INSERT INTO survey_question(survey_id, question_id) VALUES ($1, $2)',
+            [survey_id, question_id]
+        );
+
+        await pool.query(
+            'INSERT INTO question_available_answer(question_id, available_answer_id) VALUES ($1, $2)',
+            [question_id, answer_id]
+        );
+
+        res.status(201).send();
+    } catch (error) {
+        res.status(400).send({
+            signup_error: 'Error while adding question to survey..Try again later.'
+        });
+    }
+});
+
 module.exports = Router;
