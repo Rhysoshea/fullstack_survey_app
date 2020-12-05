@@ -28,7 +28,7 @@ CREATE TABLE person(
 
 CREATE TABLE available_answer(
   available_answer_id BIGSERIAL PRIMARY KEY NOT NULL,
-  answer TEXT NOT NULL
+  answer_text TEXT NOT NULL
 );
 
 CREATE TABLE question(
@@ -40,20 +40,32 @@ CREATE TABLE question(
 
 CREATE TABLE survey(
   survey_id BIGSERIAL PRIMARY KEY NOT NULL,
-  survey_title TEXT NOT NULL,
   publisher_id BIGSERIAL NOT NULL,
-  question_id BIGSERIAL NOT NULL,
+  survey_title TEXT NOT NULL,
   FOREIGN KEY(publisher_id) REFERENCES publisher(publisher_id),
   FOREIGN KEY(question_id) REFERENCES question(question_id)
+);
 
+CREATE TABLE survey_question(
+  survey_id BIGSERIAL PRIMARY KEY NOT NULL,
+  question_id BIGSERIAL NOT NULL,
+  FOREIGN KEY(survey_id) REFERENCES survey(survey_id),
+  FOREIGN KEY(question_id) REFERENCES question(question_id)
+);
+
+CREATE TABLE question_available_answer(
+  question_id BIGSERIAL PRIMARY KEY NOT NULL,
+  available_answer_id BIGSERIAL NOT NULL,
+  FOREIGN KEY(question_id) REFERENCES question(question_id),
+  FOREIGN KEY(available_answer_id) REFERENCES available_answer(available_answer_id)
 );
 
 CREATE TABLE answer(
   answer_id BIGSERIAL PRIMARY KEY NOT NULL,
+  available_answer_id BIGSERIAL NOT NULL,
+  question_id BIGSERIAL NOT NULL,
   person_id BIGSERIAL NOT NULL,
   survey_id BIGSERIAL NOT NULL,
-  question_id BIGSERIAL NOT NULL,
-  available_answer_id BIGSERIAL NOT NULL,
   FOREIGN KEY(person_id) REFERENCES person(person_id),
   FOREIGN KEY(survey_id) REFERENCES survey(survey_id),
   FOREIGN KEY(question_id) REFERENCES question(question_id),
