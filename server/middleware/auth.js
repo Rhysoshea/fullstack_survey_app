@@ -6,7 +6,7 @@ const authMiddleware = async function (req, res, next) {
         const token = req.header('Authorization').split(' ')[1];
         const decoded = jwt.verify(token, process.env.secret);
         const result = await pool.query(
-            'select b.userid,b.first_name,b.last_name,b.email,t.access_token from publisher b inner join tokens t on b.userid=t.userid where t.access_token=$1 and t.userid=$2',
+            'select b.publisher_id,b.first_name,b.last_name,b.email,t.access_token from publisher b inner join tokens t on b.publisher_id=t.publisher_id where t.access_token=$1 and t.publisher_id=$2',
             [token, decoded.userid]
         );
         const user = result.rows[0];
