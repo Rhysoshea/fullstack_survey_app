@@ -62,7 +62,9 @@ export const initiateLogout = () => {
 export const addQuestion = (data) => {
     return async (dispatch) => {
         try {
+            setAuthHeader();
             await axios.post(`${BASE_API_URL}/create_survey`, data);
+            removeAuthHeader();
             return { success: true };
         } catch (error) {
             console.log('error', error);

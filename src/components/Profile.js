@@ -18,11 +18,11 @@ class Profile extends React.Component {
     componentDidMount() {
         const { profile } = this.props;
         if (!_.isEmpty(profile)) {
-            const { survey_title, question, question_answer } = profile;
+            const { survey_title, question, answer } = profile;
             this.setState({
                 survey_title,
                 question,
-                question_answer
+                answer
             });
         }
     }
@@ -34,8 +34,8 @@ class Profile extends React.Component {
             });
         }
         if (!_.isEqual(prevProps.profile, this.props.profile)) {
-            const { survey_title, question, question_answer, email } = this.props.profile;
-            this.setState({ survey_title, question, question_answer, email });
+            const { survey_title, question, answer } = this.props.profile;
+            this.setState({ survey_title, question, answer });
         }
     }
 
@@ -45,14 +45,14 @@ class Profile extends React.Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        const { survey_title, question, question_answer } = this.state;
+        const { survey_title, question, answer } = this.state;
         const surveyData = {
             survey_title,
             question,
-            question_answer
+            answer
         };
 
-        const fieldsToValidate = [{ survey_title }, { question }, { question_answer }];
+        const fieldsToValidate = [{ survey_title }, { question }, { answer }];
 
         const allFieldsEntered = validateFields(fieldsToValidate);
         if (!allFieldsEntered) {
@@ -75,7 +75,7 @@ class Profile extends React.Component {
     };
 
     render() {
-        const { errorMsg, survey_title, question, question_answer, isSubmitted } = this.state;
+        const { errorMsg, survey_title, question, answer, isSubmitted } = this.state;
         return (
             <div className="col-md-6 offset-md-3">
                 <Form onSubmit={this.handleSubmit} className="profile-form">
@@ -109,13 +109,13 @@ class Profile extends React.Component {
                             onChange={this.handleOnChange}
                         />
                     </Form.Group>
-                    <Form.Group controlId="question_answer">
+                    <Form.Group controlId="answer">
                         <Form.Label>Available answer:</Form.Label>
                         <Form.Control
                             type="text"
-                            name="question_answer"
+                            name="answer"
                             placeholder="Enter an answer"
-                            value={question_answer}
+                            value={answer}
                             onChange={this.handleOnChange}
                         />
                     </Form.Group>

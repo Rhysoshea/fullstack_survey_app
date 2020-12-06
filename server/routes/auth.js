@@ -100,10 +100,11 @@ Router.post('/logout', authMiddleware, async (req, res) => {
     }
 });
 
-Router.post('/create_survey', authMiddleware, async (req, res) => {
+Router.post('/create_survey',async (req, res) => {
     try {
 
         const { survey_title, question, answer } = req.body;
+        console.log("HERE");
         console.log(req.body);
         console.log(req.user);
         const { publisher_id, access_token } = req.user;
