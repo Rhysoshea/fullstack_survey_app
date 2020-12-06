@@ -5,8 +5,11 @@ Add Postgresql database connection details in `server/db/connect.js` file. Chang
 ## Add database tables
 
 Connect to Postgresql on your local machine with the following commands:
+
 `su - postgres `
+
 `psql`
+
 Then execute sql scripts from `server/scripts.sql` file
 
 ## To run the project execute following commands in sequence
