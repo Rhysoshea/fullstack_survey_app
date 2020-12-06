@@ -11,7 +11,7 @@ CREATE TABLE publisher(
   unique(email)
 );
 
-CREATE TABLE TOKENS(
+CREATE TABLE tokens(
   id BIGSERIAL PRIMARY KEY NOT NULL,
   access_token VARCHAR(500) NOT NULL,
   publisher_id BIGSERIAL NOT NULL,
@@ -33,16 +33,14 @@ CREATE TABLE available_answer(
 
 CREATE TABLE question(
   question_id BIGSERIAL PRIMARY KEY NOT NULL,
-  question_text TEXT NOT NULL,
-  FOREIGN KEY(available_answer_id) REFERENCES available_answer(available_answer_id)
+  question_text TEXT NOT NULL
 );
 
 CREATE TABLE survey(
   survey_id BIGSERIAL PRIMARY KEY NOT NULL,
   publisher_id BIGSERIAL NOT NULL,
   survey_title TEXT NOT NULL,
-  FOREIGN KEY(publisher_id) REFERENCES publisher(publisher_id),
-  FOREIGN KEY(question_id) REFERENCES question(question_id)
+  FOREIGN KEY(publisher_id) REFERENCES publisher(publisher_id)
 );
 
 CREATE TABLE survey_question(
@@ -69,7 +67,6 @@ CREATE TABLE answer(
   FOREIGN KEY(survey_id) REFERENCES survey(survey_id),
   FOREIGN KEY(question_id) REFERENCES question(question_id),
   FOREIGN KEY(available_answer_id) REFERENCES available_answer(available_answer_id)
-
 );
 
 
