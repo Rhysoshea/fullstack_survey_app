@@ -158,7 +158,78 @@ Router.post('/create_survey',async (req, res) => {
         res.status(201).send();
     } catch (error) {
         res.status(400).send({
-            signup_error: 'Error while adding question to survey..Try again later.'
+            create_error: 'Error while adding question to survey..Try again later.'
+        });
+    }
+});
+
+Router.post('/fetch_survey', async (req, res) => {
+    try {
+        const { survey_title } = req.body;
+        const validFieldsToUpdate = [
+            'survey_title'
+        ];
+        const receivedFields = Object.keys(req.body);
+        const isInvalidFieldProvided = isInvalidField(
+            receivedFields,
+            validFieldsToUpdate
+        );
+
+        if (isInvalidFieldProvided) {
+            return res.status(400).send({
+                lookup_error: 'Invalid field.'
+            });
+        }
+
+        const survey_exists = await pool.query(
+            'SELECT EXISTS(SELECT 1 FROM survey WHERE survey_title=$1)',
+            [survey_title]
+        );
+
+        if (!survey_exists.rows[0]) {
+            return res.status(400).send({
+                lookup_error: 'Survey not found in database.'
+            });
+        }
+
+        const result_survey = await pool.query(
+            'SELECT survey_id FROM survey WHERE survey_title=$1',
+            [survey_title]
+        );
+        const survey_id = result_survey.rows[0].survey_title;
+
+        var return_object = {"survey_title": survey_title};
+
+        const question_result = await pool.query(
+            'SELECT question_id FROM survey_question WHERE survey_id=$1',
+            [survey_id]
+        );
+        const question_list = question_result.rows[0];
+
+        for (var i = 0; i < question_list.length; i++) {
+            var question_id = question_list[i];
+
+            var question_title_result = await pool.query(
+                'SELECT question_title FROM question WHERE question_id=$1',
+                [question_id]
+            );
+            var question_title = question_title_result.rows[0];
+
+            var available_answer_result = await pool.query(
+                'SELECT b.answer_text FROM available_answer a INNER JOIN question_available_answer q ON a.available_answer_id = q.available_answer_id WHERE qquestion_id=$1',
+                [question_id]
+            );
+            var answer_text = available_answer_result.rows[0];
+
+            return_object[question_title] = answer_text;
+
+        };
+
+
+        res.status(200).send();
+    } catch (error) {
+        res.status(400).send({
+            lookup_error: 'Error while searching for survey..Try again later.'
         });
     }
 });
