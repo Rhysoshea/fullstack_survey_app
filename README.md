@@ -1,3 +1,33 @@
+## Connect to Postgresql Database
+
+Add Postgresql database connection details in `server/db/connect.js` file. Change if required.
+
+## Add database tables
+
+Connect to Postgresql on your local machine with the following commands:
+`su - postgres `
+`psql`
+Then execute sql scripts from `server/scripts.sql` file
+
+## To run the project execute following commands in sequence
+
+    1. yarn install
+    2. yarn start
+    3. cd server
+    4. yarn install
+    5. yarn start
+
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+# Project in progress
+*To-do*
+- Fix authentication when adding a survey question
+- Allow adding multiple questions at the same time, instead of individual questions
+- Allow fetch of survey to display on UI
+- Improve UI to be more user friendly
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
