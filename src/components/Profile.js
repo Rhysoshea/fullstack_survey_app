@@ -10,7 +10,7 @@ class Profile extends React.Component {
     state = {
         survey_title: '',
         question: '',
-        question_answer: '',
+        answer: '',
         email: '',
         errorMsg: '',
         isSubmitted: false
@@ -48,7 +48,7 @@ class Profile extends React.Component {
     handleSubmit = (event) => {
         event.preventDefault();
         const { survey_title, question, question_answer } = this.state;
-        const profileData = {
+        const surveyData = {
             survey_title,
             question,
             question_answer
@@ -65,7 +65,7 @@ class Profile extends React.Component {
             });
         } else {
             this.setState({ isSubmitted: true, errorMsg: '' });
-            this.props.dispatch(initiateUpdateProfile(profileData));
+            this.props.dispatch(initiateUpdateProfile(surveyData));
         }
     };
 
@@ -77,7 +77,7 @@ class Profile extends React.Component {
     };
 
     render() {
-        const { errorMsg, survey_title, question, question_answer, email, isSubmitted } = this.state;
+        const { errorMsg, survey_title, question, question_answer, isSubmitted } = this.state;
         return (
             <div className="col-md-6 offset-md-3">
                 <Form onSubmit={this.handleSubmit} className="profile-form">
@@ -90,10 +90,7 @@ class Profile extends React.Component {
                                 </p>
                             )
                         )}
-                    <Form.Group controlId="email">
-                        <Form.Label>Email address:</Form.Label>
-                        <span className="label-value">{email}</span>
-                    </Form.Group>
+
                     <Form.Group controlId="survey_title">
                         <Form.Label>Survey Title:</Form.Label>
                         <Form.Control

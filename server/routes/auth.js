@@ -32,7 +32,7 @@ Router.post('/signup', async (req, res) => {
         }
 
         const result = await pool.query(
-            'select count(*) as count from publisher where email=$1',
+            'SELECT COUNT(*) as count FROM publisher WHERE email=$1',
             [email]
         );
 
@@ -45,7 +45,7 @@ Router.post('/signup', async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 8);
         await pool.query(
-            'insert into publisher(first_name, last_name, email, password) values($1,$2,$3,$4)',
+            'INSERT INTO publisher(first_name, last_name, email, password) VALUES($1,$2,$3,$4)',
             [first_name, last_name, email, hashedPassword]
         );
         res.status(201).send();
@@ -68,7 +68,7 @@ Router.post('/signin', async (req, res) => {
         const token = await generateAuthToken(user);
 
         const result = await pool.query(
-            'insert into tokens(access_token, publisher_id) values($1,$2) returning *',
+            'INSERT INTO tokens(access_token, publisher_id) VALUES($1,$2) RETURNING *',
             [token, user.publisher_id]
         );
         if (!result.rows[0]) {
@@ -100,16 +100,20 @@ Router.post('/logout', authMiddleware, async (req, res) => {
     }
 });
 
-Router.post('/create_survey', async (req, res) => {
+Router.post('/create_survey', authMiddleware, async (req, res) => {
     try {
-        const { survey_title, question, answer, email } = req.body;
 
-        const result_publisher = await pool.query(
-            'SELECT publisher_id FROM publisher WHERE email=$1',
-            [email]
-        );
-        const publisher_id = result_publisher.rows[0].publisher_id; 
+        const { survey_title, question, answer } = req.body;
+        console.log(req.body);
+        console.log(req.user);
+        const { publisher_id, access_token } = req.user;
 
+
+        // const result_publisher = await pool.query(
+        //     'SELECT publisher_id FROM publisher WHERE email=$1',
+        //     [email]
+        // );
+        // const publisher_id = result_publisher.rows[0].publisher_id; 
         const result_publisher_survey = await pool.query(
             'SELECT count(*) as count FROM survey WHERE survey_title=$1 AND publisher_id=$2', [survey_title, publisher_id]
         );
