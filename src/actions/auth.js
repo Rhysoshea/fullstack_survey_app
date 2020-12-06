@@ -73,3 +73,16 @@ export const addQuestion = (data) => {
         }
     };
 };
+
+export const fetchSurvey = (data) => {
+    return async (dispatch) => {
+        try {
+            await axios.post(`${BASE_API_URL}/fetch_survey`, data);
+            return { success: true };
+        } catch (error) {
+            console.log('error', error);
+            error.response && dispatch(getErrors(error.response.data));
+            return { success: false };
+        }
+    };
+};
