@@ -88,7 +88,7 @@ Router.post('/signin', async (req, res) => {
 Router.post('/logout', authMiddleware, async (req, res) => {
     try {
         const { publisher_id, access_token } = req.user;
-        await pool.query('delete from tokens where publisher_id=$1 and access_token=$2', [
+        await pool.query('DELETE FROM tokens WHERE publisher_id=$1 AND access_token=$2', [
             publisher_id,
             access_token
         ]);
