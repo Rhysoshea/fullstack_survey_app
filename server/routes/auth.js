@@ -102,13 +102,14 @@ Router.post('/logout', authMiddleware, async (req, res) => {
 
 Router.post('/create_survey', async (req, res) => {
     try {
-        const { survey_title, question, answer, email } = req.body;
+        const { survey_title, question, answer } = req.body;
+        const { publisher_id, access_token } = req.user;
 
-        const result_publisher = await pool.query(
-            'SELECT publisher_id FROM publisher WHERE email=$1',
-            [email]
-        );
-        const publisher_id = result_publisher.rows[0].publisher_id; 
+        // const result_publisher = await pool.query(
+        //     'SELECT publisher_id FROM publisher WHERE email=$1',
+        //     [email]
+        // );
+        // const publisher_id = result_publisher.rows[0].publisher_id; 
 
         const result_publisher_survey = await pool.query(
             'SELECT count(*) as count FROM survey WHERE survey_title=$1 AND publisher_id=$2', [survey_title, publisher_id]
