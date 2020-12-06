@@ -18,8 +18,6 @@ Then execute sql scripts from `server/scripts.sql` file
     5. yarn start
 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
 # Project in progress
 *To-do*
 - Fix authentication when adding a survey question
@@ -27,6 +25,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - Allow fetch of survey to display on UI
 - Improve UI to be more user friendly
 
+
+
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 # Getting Started with Create React App
 
