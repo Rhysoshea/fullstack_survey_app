@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { Form, Button } from 'react-bootstrap';
-import { initiateUpdateProfile } from '../actions/profile';
+import { addQuestion } from '../actions/auth';
 import { validateFields } from '../utils/common';
 import { resetErrors } from '../actions/errors';
 
@@ -11,7 +11,6 @@ class Profile extends React.Component {
         survey_title: '',
         question: '',
         answer: '',
-        email: '',
         errorMsg: '',
         isSubmitted: false
     };
@@ -19,12 +18,11 @@ class Profile extends React.Component {
     componentDidMount() {
         const { profile } = this.props;
         if (!_.isEmpty(profile)) {
-            const { survey_title, question, question_answer, email } = profile;
+            const { survey_title, question, question_answer } = profile;
             this.setState({
                 survey_title,
                 question,
-                question_answer,
-                email
+                question_answer
             });
         }
     }
@@ -65,7 +63,7 @@ class Profile extends React.Component {
             });
         } else {
             this.setState({ isSubmitted: true, errorMsg: '' });
-            this.props.dispatch(initiateUpdateProfile(surveyData));
+            this.props.dispatch(addQuestion(surveyData));
         }
     };
 

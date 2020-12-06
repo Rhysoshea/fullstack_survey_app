@@ -58,3 +58,16 @@ export const initiateLogout = () => {
         }
     };
 };
+
+export const addQuestion = (data) => {
+    return async (dispatch) => {
+        try {
+            await axios.post(`${BASE_API_URL}/create_survey`, data);
+            return { success: true };
+        } catch (error) {
+            console.log('error', error);
+            error.response && dispatch(getErrors(error.response.data));
+            return { success: false };
+        }
+    };
+};
